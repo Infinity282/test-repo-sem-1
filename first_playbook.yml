@@ -1,6 +1,10 @@
 - name: My First Ansible Playbook
   hosts: web-servers
-  become: yes
+  gather_facts: true
+  become: true
+  become_method: sudo
+  vars:
+    ansible_become_password: "your_sudo_password_here"
   tasks:
     - name: Update apt package cache (for Debian)
       apt:
