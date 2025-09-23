@@ -4,7 +4,7 @@
   become: true
   become_method: sudo
   vars:
-    ansible_become_password: "your_sudo_password_here"
+    ansible_become_password: "1234"
   tasks:
     - name: Update apt package cache (for Debian)
       apt:
