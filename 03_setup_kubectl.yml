@@ -55,10 +55,14 @@
       register: kubectl_nodes
       delegate_to: "{{ ansible_control_name }}"
       become_user: "root"
-
+      
+    - name: Copy admin config to user directory
+      ansible.builtin.shell: |
+        export KUBECONFIG=/home/{{ whoami_output.stdout }}/.kube/config
     - name: Display nodes info
       ansible.builtin.debug:
         msg: "{{ kubectl_nodes.stdout }}"
+
 
 
 
