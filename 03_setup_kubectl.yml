@@ -53,6 +53,7 @@
         regexp: 'server: https://127.0.0.1:6443'
         replace: "server: https://{{ hostvars['k8s-master-01']['ansible_default_ipv4']['address'] }}:6443"
       delegate_to: "{{ ansible_control_name }}"
+      become_user: "root"
 
     - name: Set correct permissions on kubeconfig
       ansible.builtin.file:
@@ -61,22 +62,26 @@
         group: admin
         mode: 0600
       delegate_to: "{{ ansible_control_name }}"
+      become_user: "root"
 
     - name: Install kubectl on ansible-control node
       package:
         name: kubectl
         state: present
       delegate_to: "{{ ansible_control_name }}"
+      become_user: "root"
 
     - name: Verify kubectl access
       ansible.builtin.shell: |
         kubectl get nodes
       register: kubectl_nodes
       delegate_to: "{{ ansible_control_name }}"
+      become_user: "root"
 
     - name: Display nodes info
       ansible.builtin.debug:
         msg: "{{ kubectl_nodes.stdout }}"
+
 
 
 
