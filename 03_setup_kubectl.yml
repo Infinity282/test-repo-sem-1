@@ -7,11 +7,14 @@
     ansible_control_name: "127.0.0.1"
     admin_user: "admin"
   tasks:
-    - name: Initialize cluster with kubeadm
+    - name: "ШАГ 1: Определяю текущего пользователя"
       ansible.builtin.shell: |
-         whoami
-      become: false
-      delegate_to: "{{ ansible_control_name }}"   
+        whoami
+      register: whoami_output
+
+    - name: "ШАГ 2: Показываю результат"
+      ansible.builtin.debug:
+        msg: "Текущий пользователь: {{ whoami_output.stdout }}"
      
     - name: Create admin group
       ansible.builtin.group:
@@ -71,6 +74,7 @@
     - name: Display nodes info
       ansible.builtin.debug:
         msg: "{{ kubectl_nodes.stdout }}"
+
 
 
 
