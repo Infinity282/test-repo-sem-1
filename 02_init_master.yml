@@ -8,6 +8,13 @@
     ansible_become_password: "1234"
     admin_user: "admin"
   tasks:
+    - name: Create admin group
+      ansible.builtin.group:
+        name: "admin"
+        state: present
+        system: false
+      register: admin_group_created
+      
     - name: Create admin user
       ansible.builtin.user:
         name: "{{ admin_user }}"
@@ -68,6 +75,7 @@
         port: 6443
         delay: 10
         timeout: 120
+
 
 
 
