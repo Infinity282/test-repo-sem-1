@@ -89,11 +89,23 @@
         state: restarted
         enabled: yes
 
+    - name: Download and dearmor Kubernetes GPG key
+      ansible.builtin.shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.34/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+      args:
+        creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+      changed_when: true
+
+    - name: Set permissions for Kubernetes GPG key
+      ansible.builtin.file:
+        path: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+        mode: '0644'
+
     - name: Add Kubernetes repository
       ansible.builtin.apt_repository:
-        repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+        repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.34/deb/ /"
         state: present
         filename: kubernetes
+        mode: '0644'
 
     - name: Install kubeadm, kubelet, kubectl
       package:
