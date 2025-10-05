@@ -19,38 +19,16 @@
       ansible.builtin.debug:
         msg: "Текущий пользователь: {{ whoami_output.stdout }}"
       
-    - name: Create admin group
-      ansible.builtin.group:
-        name: "{{ admin_user }}"
-        state: present
-        system: false
-      delegate_to: "{{ ansible_control_name }}"
-      become_user: "root"
-      
-    - name: Create admin user
-      ansible.builtin.user:
-        name: "{{ admin_user }}"
-        state: present
-        shell: /bin/bash
-        home: /home/{{ admin_user }}
-        create_home: true
-        group: "{{ admin_user }}"
-        groups: root
-        append: yes
-        password: "{{ ansible_become_password }}"
-      delegate_to: "{{ ansible_control_name }}"
-      become_user: "root"
-      
     - name: Copy kubeconfig to ansible-control node
       ansible.builtin.fetch:
         src: /home/admin/.kube/config
-        dest: /home/admin/.kube/config
+        dest: /home/{{ whoami_output.stdout }}/.kube/config
         flat: yes
       become_user: "root"
         
     - name: Update kubeconfig with master node IP
       ansible.builtin.replace:
-        path: /home/admin/.kube/config
+        path: /home/{{ whoami_output.stdout }}/.kube/config
         regexp: 'server: https://127.0.0.1:6443'
         replace: "server: https://{{ hostvars['k8s-master-01']['ansible_default_ipv4']['address'] }}:6443"
       delegate_to: "{{ ansible_control_name }}"
@@ -58,9 +36,8 @@
 
     - name: Set correct permissions on kubeconfig
       ansible.builtin.file:
-        path: /home/admin/.kube/config
-        owner: admin
-        group: admin
+        path: /home/{{ whoami_output.stdout }}/.kube/config
+        owner: semaphore
         mode: 0777
       delegate_to: "{{ ansible_control_name }}"
       become_user: "root"
@@ -82,6 +59,7 @@
     - name: Display nodes info
       ansible.builtin.debug:
         msg: "{{ kubectl_nodes.stdout }}"
+
 
 
 
