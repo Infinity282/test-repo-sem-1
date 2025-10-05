@@ -3,7 +3,7 @@
   hosts: k8s_master
   become: yes
   vars:
-    ansible_become_password: "1234"
+    ansible_become_password: "someStrongRandomPassword"
     ansible_control_name: "127.0.0.1"
     admin_user: "admin"
   tasks:
@@ -64,6 +64,7 @@
     - name: Display nodes info
       ansible.builtin.debug:
         msg: "{{ kubectl_nodes.stdout }}"
+
 
 
 
