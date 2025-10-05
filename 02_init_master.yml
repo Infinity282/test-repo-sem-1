@@ -5,7 +5,7 @@
   vars:
     k8s_version: "1.30"
     pod_network_cidr: "10.244.0.0/16"
-  
+    ansible_become_password: "1234"
   tasks:
     - name: Initialize cluster with kubeadm
       ansible.builtin.shell: |
@@ -54,3 +54,4 @@
         port: 6443
         delay: 10
         timeout: 120
+
