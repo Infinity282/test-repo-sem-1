@@ -2,8 +2,10 @@
 - name: Prepare all Kubernetes nodes
   hosts: k8s_all
   become: yes
+  become_method: sudo
   vars:
     k8s_version: "1.28.5"
+    ansible_become_password: "1234"
     
   tasks:
     - name: Disable swap
