@@ -42,9 +42,10 @@
         state: present
 
     - name: Add Docker GPG key
-      ansible.builtin.apt_key:
-        url: https://download.docker.com/linux/debian/gpg
-        state: present
+      ansible.builtin.shell:
+        cmd: |
+          curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+        creates: /etc/apt/keyrings/docker.gpg
 
     - name: Add Docker repository
       ansible.builtin.apt_repository:
