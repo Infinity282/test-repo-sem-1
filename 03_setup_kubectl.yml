@@ -8,12 +8,12 @@
     ansible_control_name: "127.0.0.1"
     admin_user: "admin"
   tasks:
-      - name: Create admin group
+    - name: Create admin group
       ansible.builtin.group:
         name: "{{ admin_user }}"
         state: present
         system: false
-      register: admin_group_created
+      delegate_to: "{{ ansible_control_name }}"
       
     - name: Create admin user
       ansible.builtin.user:
@@ -26,7 +26,7 @@
         groups: sudo
         append: yes
         password: "{{ ansible_become_password }}"
-      register: admin_user_created
+      delegate_to: "{{ ansible_control_name }}"
       
     - name: Copy kubeconfig to ansible-control node
       ansible.builtin.fetch:
@@ -65,6 +65,7 @@
     - name: Display nodes info
       ansible.builtin.debug:
         msg: "{{ kubectl_nodes.stdout }}"
+
 
 
 
