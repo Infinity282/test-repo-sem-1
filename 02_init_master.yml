@@ -18,7 +18,7 @@
         group: "{{ admin_user }}"
         groups: sudo
         append: yes
-        password: {{ ansible_become_password }}
+        password: "{{ ansible_become_password }}"
       register: admin_user_created
 
     # - name: Initialize cluster with kubeadm
@@ -68,6 +68,7 @@
         port: 6443
         delay: 10
         timeout: 120
+
 
 
 
