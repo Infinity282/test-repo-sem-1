@@ -33,7 +33,6 @@
         kubeadm init \
           --pod-network-cidr {{ pod_network_cidr }} \
           --service-cidr 10.96.0.0/12 \
-          --kubernetes-version v{{ k8s_version }}.3 \
           --apiserver-advertise-address {{ ansible_default_ipv4.address }} \
           --apiserver-cert-extra-sans {{ ansible_hostname }}
       args:
@@ -46,12 +45,13 @@
         state: directory
         owner: admin
         group: admin
-        mode: 0755
+        mode: 0777
 
     - name: Copy admin config to user directory
       ansible.builtin.shell: |
         cp -f /etc/kubernetes/admin.conf /home/admin/.kube/config
         chown admin:admin /home/admin/.kube/config
+        export KUBECONFIG=/home/admin/.kube/config
 
     - name: Extract join command from kubeadm output
       ansible.builtin.set_fact:
@@ -75,6 +75,7 @@
         port: 6443
         delay: 10
         timeout: 120
+
 
 
 
