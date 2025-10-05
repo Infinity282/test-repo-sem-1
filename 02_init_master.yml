@@ -28,17 +28,17 @@
         password: "{{ ansible_become_password }}"
       register: admin_user_created
 
-    # - name: Initialize cluster with kubeadm
-    #   ansible.builtin.shell: |
-    #     kubeadm init \
-    #       --pod-network-cidr {{ pod_network_cidr }} \
-    #       --service-cidr 10.96.0.0/12 \
-    #       --kubernetes-version v{{ k8s_version }}.3 \
-    #       --apiserver-advertise-address {{ ansible_default_ipv4.address }} \
-    #       --apiserver-cert-extra-sans {{ ansible_hostname }}
-    #   args:
-    #     creates: /etc/kubernetes/admin.conf
-    #   register: kubeadm_init
+    - name: Initialize cluster with kubeadm
+      ansible.builtin.shell: |
+        kubeadm init \
+          --pod-network-cidr {{ pod_network_cidr }} \
+          --service-cidr 10.96.0.0/12 \
+          --kubernetes-version v{{ k8s_version }}.3 \
+          --apiserver-advertise-address {{ ansible_default_ipv4.address }} \
+          --apiserver-cert-extra-sans {{ ansible_hostname }}
+      args:
+        creates: /etc/kubernetes/admin.conf
+      register: kubeadm_init
 
     - name: Create .kube directory for admin user
       ansible.builtin.file:
@@ -75,6 +75,7 @@
         port: 6443
         delay: 10
         timeout: 120
+
 
 
 
