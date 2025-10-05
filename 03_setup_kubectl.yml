@@ -62,7 +62,7 @@
         path: /home/admin/.kube/config
         owner: admin
         group: admin
-        mode: 0600
+        mode: 0777
       delegate_to: "{{ ansible_control_name }}"
       become_user: "root"
 
@@ -83,6 +83,7 @@
     - name: Display nodes info
       ansible.builtin.debug:
         msg: "{{ kubectl_nodes.stdout }}"
+
 
 
 
