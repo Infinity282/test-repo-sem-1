@@ -8,25 +8,25 @@
     ansible_become_password: "1234"
     admin_user: "admin"
   tasks:
-    - name: Create admin group
-      ansible.builtin.group:
-        name: "admin"
-        state: present
-        system: false
-      register: admin_group_created
+    # - name: Create admin group
+    #   ansible.builtin.group:
+    #     name: "admin"
+    #     state: present
+    #     system: false
+    #   register: admin_group_created
       
-    - name: Create admin user
-      ansible.builtin.user:
-        name: "{{ admin_user }}"
-        state: present
-        shell: /bin/bash
-        home: /home/{{ admin_user }}
-        create_home: true
-        group: "{{ admin_user }}"
-        groups: sudo
-        append: yes
-        password: "{{ ansible_become_password }}"
-      register: admin_user_created
+    # - name: Create admin user
+    #   ansible.builtin.user:
+    #     name: "{{ admin_user }}"
+    #     state: present
+    #     shell: /bin/bash
+    #     home: /home/{{ admin_user }}
+    #     create_home: true
+    #     group: "{{ admin_user }}"
+    #     groups: sudo
+    #     append: yes
+    #     password: "{{ ansible_become_password }}"
+    #   register: admin_user_created
 
     - name: Initialize cluster with kubeadm
       ansible.builtin.shell: |
@@ -75,6 +75,7 @@
         port: 6443
         delay: 10
         timeout: 120
+
 
 
 
