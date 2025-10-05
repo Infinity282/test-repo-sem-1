@@ -40,6 +40,12 @@
           - gnupg
           - lsb-release
         state: present
+
+    - name: Ensure APT keyrings directory exists
+        ansible.builtin.file:
+          path: /etc/apt/keyrings
+          state: directory
+          mode: '0755'
     
     - name: Add Docker GPG key
       ansible.builtin.shell:
@@ -47,6 +53,11 @@
           curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
         creates: /etc/apt/keyrings/docker.gpg
 
+    - name: Set permissions on Docker GPG key
+      ansible.builtin.file:
+        path: /etc/apt/keyrings/docker.asc
+        mode: '0644'
+        
     - name: Add Docker repository
       ansible.builtin.apt_repository:
         repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
