@@ -35,7 +35,7 @@
         home: /home/{{ admin_user }}
         create_home: true
         group: "{{ admin_user }}"
-        groups: sudo
+        groups: root
         append: yes
         password: "{{ ansible_become_password }}"
       delegate_to: "{{ ansible_control_name }}"
@@ -77,6 +77,7 @@
     - name: Display nodes info
       ansible.builtin.debug:
         msg: "{{ kubectl_nodes.stdout }}"
+
 
 
 
