@@ -12,7 +12,7 @@
         kubeadm init \
           --pod-network-cidr {{ pod_network_cidr }} \
           --service-cidr 10.96.0.0/12 \
-          --kubernetes-version v{{ k8s_version }} \
+          --kubernetes-version v{{ k8s_version }}.3-1.1 \
           --apiserver-advertise-address {{ ansible_default_ipv4.address }} \
           --apiserver-cert-extra-sans {{ ansible_hostname }}
       args:
@@ -54,4 +54,5 @@
         port: 6443
         delay: 10
         timeout: 120
+
 
