@@ -46,7 +46,7 @@
         dest: /home/admin/.kube/config
         flat: yes
       delegate_to: "{{ ansible_control_name }}"
-      become_user: "root"
+      become_user: "admin"
         
     - name: Update kubeconfig with master node IP
       ansible.builtin.replace:
@@ -82,6 +82,7 @@
     - name: Display nodes info
       ansible.builtin.debug:
         msg: "{{ kubectl_nodes.stdout }}"
+
 
 
 
