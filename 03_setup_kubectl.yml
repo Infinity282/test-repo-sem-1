@@ -26,14 +26,6 @@
         flat: yes
       become_user: "root"
         
-    - name: Update kubeconfig with master node IP
-      ansible.builtin.replace:
-        path: /home/{{ whoami_output.stdout }}/.kube/config
-        regexp: 'server: https://127.0.0.1:6443'
-        replace: "server: https://{{ hostvars['k8s-master-01']['ansible_default_ipv4']['address'] }}:6443"
-      delegate_to: "{{ ansible_control_name }}"
-      become_user: "root"
-
     - name: Set correct permissions on kubeconfig
       ansible.builtin.file:
         path: /home/{{ whoami_output.stdout }}/.kube/config
@@ -62,6 +54,7 @@
     - name: Display nodes info
       ansible.builtin.debug:
         msg: "{{ kubectl_nodes.stdout }}"
+
 
 
 
