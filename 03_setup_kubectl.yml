@@ -4,7 +4,7 @@
   become: true
   vars:
     ansible_become_password: "1234"
-    ansible_control_name: "ansible-control"
+    ansible_control_name: "127.0.0.1"
   tasks:
     - name: Copy kubeconfig to ansible-control node
       ansible.builtin.fetch:
@@ -43,6 +43,7 @@
     - name: Display nodes info
       ansible.builtin.debug:
         msg: "{{ kubectl_nodes.stdout }}"
+
 
 
 
