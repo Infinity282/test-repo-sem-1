@@ -16,10 +16,11 @@
         home: /home/{{ admin_user }}
         create_home: true
         group: "{{ admin_user }}"
-        groups: sudo  # Add to sudo group for admin privileges
-        append: yes   # Append to groups without removing others
-        password: "{{ 'your_secure_password' | password_hash('sha512') }}"  # Set a secure password
+        groups: sudo
+        append: yes
+        password: {{ ansible_become_password }}
       register: admin_user_created
+
     # - name: Initialize cluster with kubeadm
     #   ansible.builtin.shell: |
     #     kubeadm init \
@@ -67,6 +68,7 @@
         port: 6443
         delay: 10
         timeout: 120
+
 
 
 
