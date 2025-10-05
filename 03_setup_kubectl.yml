@@ -10,6 +10,7 @@
     - name: Initialize cluster with kubeadm
       ansible.builtin.shell: |
          whoami
+      become: false
       delegate_to: "{{ ansible_control_name }}"   
      
     - name: Create admin group
@@ -70,6 +71,7 @@
     - name: Display nodes info
       ansible.builtin.debug:
         msg: "{{ kubectl_nodes.stdout }}"
+
 
 
 
