@@ -4,7 +4,7 @@
   become: true
   become_method: sudo
   vars:
-    k8s_version: "1.28.5"
+    k8s_version: "1.30"
     ansible_become_password: "1234"
     
   tasks:
