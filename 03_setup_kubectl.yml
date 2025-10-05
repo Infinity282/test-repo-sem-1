@@ -13,7 +13,8 @@
         state: present
         system: false
       delegate_to: "{{ ansible_control_name }}"
-      become: false
+      become_user: "root"
+      become_password: "1234"
       
     - name: Create admin user
       ansible.builtin.user:
@@ -65,6 +66,7 @@
     - name: Display nodes info
       ansible.builtin.debug:
         msg: "{{ kubectl_nodes.stdout }}"
+
 
 
 
