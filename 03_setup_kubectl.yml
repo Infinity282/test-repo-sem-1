@@ -2,7 +2,7 @@
 - name: Setup kubectl access on ansible-control node
   hosts: k8s_master
   become: true
-  become_method: sudo
+  become_method: "su"
   vars:
     ansible_become_password: "1234"
     ansible_control_name: "127.0.0.1"
@@ -65,6 +65,7 @@
     - name: Display nodes info
       ansible.builtin.debug:
         msg: "{{ kubectl_nodes.stdout }}"
+
 
 
 
