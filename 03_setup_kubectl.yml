@@ -20,26 +20,26 @@
         msg: "Текущий пользователь: {{ whoami_output.stdout }}"
       
     - name: Copy kubeconfig to ansible-control node
-      ansible.builtin.fetch:
-        src: /home/admin/.kube/config
-        dest: /home/{{ whoami_output.stdout }}/.kube/config
-        flat: yes
-      become_user: "root"
+      # ansible.builtin.fetch:
+      # #   src: /home/admin/.kube/config
+      # #   dest: /home/{{ whoami_output.stdout }}/.kube/config
+      # #   flat: yes
+      # # become_user: "root"
         
     - name: Set correct permissions on kubeconfig
-      ansible.builtin.file:
-        path: /home/{{ whoami_output.stdout }}/.kube/config
-        owner: semaphore
-        mode: 0777
-      delegate_to: "{{ ansible_control_name }}"
-      become_user: "root"
+      # ansible.builtin.file:
+      #   path: /home/{{ whoami_output.stdout }}/.kube/config
+      #   owner: semaphore
+      #   mode: 0777
+      # delegate_to: "{{ ansible_control_name }}"
+      # become_user: "root"
 
     - name: Install kubectl on ansible-control node
-      package:
-        name: kubectl
-        state: present
-      delegate_to: "{{ ansible_control_name }}"
-      become_user: "root"
+      # package:
+      #   name: kubectl
+      #   state: present
+      # delegate_to: "{{ ansible_control_name }}"
+      # become_user: "root"
 
     - name: Verify kubectl access
       ansible.builtin.shell: |
@@ -54,6 +54,7 @@
     - name: Display nodes info
       ansible.builtin.debug:
         msg: "{{ kubectl_nodes.stdout }}"
+
 
 
 
