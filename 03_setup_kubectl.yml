@@ -54,7 +54,7 @@
         
     - name: Verify kubectl access
       ansible.builtin.shell: |
-        kubectl get nodes
+        kubectl --kubeconfig=/home/{{ whoami_output.stdout }}/.kube/config get nodes
       register: kubectl_nodes
       delegate_to: "{{ ansible_control_name }}"
       become_user: "root"
@@ -63,6 +63,7 @@
       ansible.builtin.debug:
         msg: "{{ kubectl_nodes.stdout }}"
       delegate_to: "{{ ansible_control_name }}"
+
 
 
 
