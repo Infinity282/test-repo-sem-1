@@ -81,10 +81,12 @@
       ansible.builtin.shell: |
         kubectl get nodes
       register: get_nodes
+      delay: 120
       
     - name: Show nodes
       ansible.builtin.debug:
         msg: "Текущий пользователь: {{ get_nodes.stdout }}"
+
 
 
 
