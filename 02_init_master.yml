@@ -82,9 +82,10 @@
         kubectl get nodes
       register: get_nodes
       
-   - name: Show nodes
-        ansible.builtin.debug:
-          msg: "Текущий пользователь: {{ get_nodes.stdout }}"
+    - name: Show nodes
+      ansible.builtin.debug:
+        msg: "Текущий пользователь: {{ get_nodes.stdout }}"
+
 
 
 
