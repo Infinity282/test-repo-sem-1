@@ -76,15 +76,19 @@
         port: 6443
         delay: 10
         timeout: 120
-
-    - name: Copy admin config to user directory
+      
+    - name: Get nodes kubectl
       ansible.builtin.shell: |
         kubectl get nodes
       register: get_nodes
+      retries: 10
+      delay: 20
+      until: get_nodes.rc == 0
       
     - name: Show nodes
       ansible.builtin.debug:
         msg: "Текущий пользователь: {{ get_nodes.stdout }}"
+
 
 
 
