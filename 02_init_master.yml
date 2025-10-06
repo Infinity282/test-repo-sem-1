@@ -79,7 +79,7 @@
       
     - name: Get nodes kubectl
       ansible.builtin.shell: |
-        kubectl get nodes
+        kubectl --kubeconfig=/home/admin/.kube/config get nodes
       register: get_nodes
       retries: 10
       delay: 20
@@ -88,6 +88,7 @@
     - name: Show nodes
       ansible.builtin.debug:
         msg: "Текущий пользователь: {{ get_nodes.stdout }}"
+
 
 
 
