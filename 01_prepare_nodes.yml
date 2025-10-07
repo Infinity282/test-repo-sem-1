@@ -112,6 +112,10 @@
         filename: kubernetes
         mode: '0644'
 
+    - name: Run apt-get update
+      ansible.builtin.apt:
+        update_cache: yes
+            
     - name: Install kubeadm, kubelet, kubectl
       package:
         name:
