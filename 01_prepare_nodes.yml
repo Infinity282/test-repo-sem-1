@@ -39,6 +39,7 @@
           - curl
           - gnupg
           - lsb-release
+          - chrony
         state: present
 
     # - name: Ensure APT keyrings directory exists
