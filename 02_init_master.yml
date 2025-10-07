@@ -32,11 +32,8 @@
         kubeadm init \
           --pod-network-cidr 192.168.0.0/16 \
           --service-cidr 10.96.0.0/12 \
-          --kubernetes-version=v1.30.3 \
           --apiserver-advertise-address 192.168.0.107 \
-          --apiserver-cert-extra-sans 192.168.0.107 \
-          --node-name={{ ansible_hostname }} \
-          --cri-socket=/run/containerd/containerd.sock
+          --apiserver-cert-extra-sans 192.168.0.107
       args:
         creates: /etc/kubernetes/admin.conf
       register: kubeadm_init
@@ -89,6 +86,7 @@
     - name: Show nodes
       ansible.builtin.debug:
         msg: "Текущий пользователь: {{ get_nodes.stdout }}"
+
 
 
 
