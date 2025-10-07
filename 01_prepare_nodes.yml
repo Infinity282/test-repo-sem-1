@@ -41,53 +41,53 @@
           - lsb-release
         state: present
 
-    - name: Ensure APT keyrings directory exists
-      ansible.builtin.file:
-          path: /etc/apt/keyrings
-          state: directory
-          mode: '0755'
+    # - name: Ensure APT keyrings directory exists
+    #   ansible.builtin.file:
+    #       path: /etc/apt/keyrings
+    #       state: directory
+    #       mode: '0755'
 
-    - name: Download Docker GPG key
-      ansible.builtin.get_url:
-        url: https://download.docker.com/linux/ubuntu/gpg
-        dest: /etc/apt/keyrings/docker.asc
-        mode: '0644'
+    # - name: Download Docker GPG key
+    #   ansible.builtin.get_url:
+    #     url: https://download.docker.com/linux/ubuntu/gpg
+    #     dest: /etc/apt/keyrings/docker.asc
+    #     mode: '0644'
         
-    - name: Add Docker repository
-      ansible.builtin.apt_repository:
-        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
-        state: present
+    # - name: Add Docker repository
+    #   ansible.builtin.apt_repository:
+    #     repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
+    #     state: present
 
-    - name: Install containerd
-      package:
-        name: containerd.io
-        state: present
+    # - name: Install containerd
+    #   package:
+    #     name: containerd.io
+    #     state: present
 
-    - name: Create containerd configuration directory
-      ansible.builtin.file:
-        path: /etc/containerd
-        state: directory
-        owner: root
-        group: root
-        mode: 0755
+    # - name: Create containerd configuration directory
+    #   ansible.builtin.file:
+    #     path: /etc/containerd
+    #     state: directory
+    #     owner: root
+    #     group: root
+    #     mode: 0755
 
-    - name: Configure containerd
-      ansible.builtin.copy:
-        content: |
-          [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
-            runtime_type = "io.containerd.runc.v2"
-            [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
-            SystemdCgroup = true
-        dest: /etc/containerd/config.toml
-        owner: root
-        group: root
-        mode: 0644
+    # - name: Configure containerd
+    #   ansible.builtin.copy:
+    #     content: |
+    #       [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+    #         runtime_type = "io.containerd.runc.v2"
+    #         [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
+    #         SystemdCgroup = true
+    #     dest: /etc/containerd/config.toml
+    #     owner: root
+    #     group: root
+    #     mode: 0644
 
-    - name: Restart and enable containerd
-      ansible.builtin.systemd:
-        name: containerd
-        state: restarted
-        enabled: yes
+    # - name: Restart and enable containerd
+    #   ansible.builtin.systemd:
+    #     name: containerd
+    #     state: restarted
+    #     enabled: yes
 
     - name: Remove old Kubernetes GPG key if exists
       ansible.builtin.file:
