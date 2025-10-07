@@ -23,7 +23,7 @@
               caCertHashes:
                 - "{{ (join_command_file.content | b64decode).split()[-1] }}"
           nodeRegistration:
-            criSocket: "run/containerd/containerd.sock"
+            criSocket: "unix:///run/containerd/containerd.sock"
         dest: /tmp/kubeadm-join-config.yaml
       when: join_command_file.content is defined
       
@@ -49,5 +49,6 @@
     - name: Display join status
       ansible.builtin.debug:
         msg: "Node {{ inventory_hostname }} joined successfully"
+
 
 
