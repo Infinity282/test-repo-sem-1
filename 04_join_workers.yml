@@ -1,0 +1,51 @@
+- name: Join worker nodes to Kubernetes cluster
+  hosts: k8s_workers
+  become: true
+  become_method: sudo
+  vars:
+    ansible_become_password: "1234"
+  tasks:
+    - name: Read join command from master node
+      ansible.builtin.slurp:
+        src: /tmp/k8s_join_command.txt
+      register: join_command_file
+      delegate_to: k8s-master-01
+
+    - name: Create kubeadm join config
+      copy:
+        content: |
+          apiVersion: kubeadm.k8s.io/v1beta3
+          kind: JoinConfiguration
+          discovery:
+            bootstrapToken:
+              apiServerEndpoint: "192.168.0.107:6443"
+              token: "{{ (join_command_file.content | b64decode).split()[4] }}"
+              caCertHashes:
+                - "{{ (join_command_file.content | b64decode).split()[-1] }}"
+          nodeRegistration:
+            criSocket: "run/containerd/containerd.sock"
+        dest: /tmp/kubeadm-join-config.yaml
+        when: join_command_file.content is defined
+      
+    - name: Join worker node to cluster using config
+      command: kubeadm join --config /tmp/kubeadm-join-config.yaml
+      args:
+        creates: /etc/kubernetes/kubelet.conf
+      when: join_command_file.content is defined
+
+    - name: Wait for node to register
+      ansible.builtin.wait_for:
+        path: /etc/kubernetes/kubelet.conf
+        timeout: 60
+
+    - name: Verify node status from master
+      ansible.builtin.shell: |
+        kubectl --kubeconfig=/home/admin/.kube/config get node get nodes {{ inventory_hostname }}
+      delegate_to: k8s-master-01
+      retries: 10
+      delay: 15
+      until: node_status.rc == 0
+
+    - name: Display join status
+      ansible.builtin.debug:
+        msg: "Node {{ inventory_hostname }} joined successfully"
