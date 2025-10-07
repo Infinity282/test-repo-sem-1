@@ -1,0 +1,20 @@
+- name: Install Calico network plugin
+hosts: k8s_master
+become: yes
+tasks:
+  - name: Apply Calico manifest
+    command: kubectl --kubeconfig=/home/admin/.kube/config apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.3/manifests/calico.yaml
+  
+  - name: Wait for calico-node to be ready
+    command: kubectl --kubeconfig=/home/admin/.kube/config wait --for=condition=ready pod -l k8s-app=calico-node -n kube-system --timeout=300s
+  
+  - name: Wait for calico-kube-controllers to be ready
+    command: kubectl --kubeconfig=/home/admin/.kube/config wait --for=condition=ready pod -l k8s-app=calico-kube-controllers -n kube-system --timeout=300s
+  
+  - name: Check nodes
+    command: kubectl --kubeconfig=/home/admin/.kube/config get nodes
+    register: nodes
+  
+  - name: Show nodes
+    debug:
+      msg: "{{ nodes.stdout }}"
