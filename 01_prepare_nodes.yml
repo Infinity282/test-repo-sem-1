@@ -72,17 +72,20 @@
     #     group: root
     #     mode: 0755
 
-    # - name: Configure containerd
-    #   ansible.builtin.copy:
-    #     content: |
-    #       [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
-    #         runtime_type = "io.containerd.runc.v2"
-    #         [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
-    #         SystemdCgroup = true
-    #     dest: /etc/containerd/config.toml
-    #     owner: root
-    #     group: root
-    #     mode: 0644
+    - name: Configure containerd
+      ansible.builtin.copy:
+        content: |
+          [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+            runtime_type = "io.containerd.runc.v2"
+            [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
+            SystemdCgroup = true
+        dest: /etc/containerd/config.toml
+        owner: root
+        group: root
+        mode: 0644
+    
+    - name: Change cni bin dir
+      ansible.builtin.shell: sed -i 's|/usr/lib/cni|/etc/cni/bin|g' /etc/containerd/config.toml
 
     # - name: Restart and enable containerd
     #   ansible.builtin.systemd:
@@ -120,9 +123,9 @@
     - name: Install kubeadm, kubelet, kubectl
       package:
         name:
-          - kubelet={{ k8s_version }}.3-1.1
-          - kubeadm={{ k8s_version }}.3-1.1
-          - kubectl={{ k8s_version }}.3-1.1
+          - kubelet
+          - kubeadm
+          - kubectl
         state: present
         allow_downgrade: yes
 
