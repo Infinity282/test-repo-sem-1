@@ -24,7 +24,7 @@
                 - "{{ (join_command_file.content | b64decode).split()[-1] }}"
           nodeRegistration:
             criSocket: "run/containerd/containerd.sock"
-      dest: /tmp/kubeadm-join-config.yaml
+        dest: /tmp/kubeadm-join-config.yaml
       when: join_command_file.content is defined
       
     - name: Join worker node to cluster using config
@@ -49,4 +49,5 @@
     - name: Display join status
       ansible.builtin.debug:
         msg: "Node {{ inventory_hostname }} joined successfully"
+
 
