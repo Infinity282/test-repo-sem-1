@@ -11,27 +11,11 @@
       register: join_command_file
       delegate_to: k8s-master-01
 
-    - name: Create kubeadm join config
-      copy:
-        content: |
-          apiVersion: kubeadm.k8s.io/v1beta3
-          kind: JoinConfiguration
-          discovery:
-            bootstrapToken:
-              apiServerEndpoint: "192.168.0.107:6443"
-              token: "{{ (join_command_file.content | b64decode).split()[4] }}"
-              caCertHashes:
-                - "{{ (join_command_file.content | b64decode).split()[-1] }}"
-          nodeRegistration:
-            criSocket: "unix:///run/containerd/containerd.sock"
-        dest: /tmp/kubeadm-join-config.yaml
-      when: join_command_file.content is defined
-      
-    - name: Join worker node to cluster using config
-      command: kubeadm join --config /tmp/kubeadm-join-config.yaml
-      args:
-        creates: /etc/kubernetes/kubelet.conf
-      when: join_command_file.content is defined
+  - name: Join worker to cluster
+    ansible.builtin.shell: "{{ join_command_file.content | b64decode }}"
+    when: join_command_file.content is defined
+    args:
+      creates: /etc/kubernetes/kubelet.conf
 
     - name: Wait for node to register
       ansible.builtin.wait_for:
@@ -49,6 +33,7 @@
     - name: Display join status
       ansible.builtin.debug:
         msg: "Node {{ inventory_hostname }} joined successfully"
+
 
 
 
