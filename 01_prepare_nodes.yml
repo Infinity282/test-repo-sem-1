@@ -85,13 +85,15 @@
         mode: 0644
     
     - name: Change cni bin dir
-      ansible.builtin.shell: sed -i 's|/usr/lib/cni|/etc/cni/bin|g' /etc/containerd/config.toml
+      ansible.builtin.shell: |
+        sh -c "containerd config default > /etc/containerd/config.toml"
+        sed -i 's|/usr/lib/cni|/etc/cni/bin|g' /etc/containerd/config.toml
 
-    # - name: Restart and enable containerd
-    #   ansible.builtin.systemd:
-    #     name: containerd
-    #     state: restarted
-    #     enabled: yes
+    - name: Restart and enable containerd
+      ansible.builtin.systemd:
+        name: containerd
+        state: restarted
+        enabled: yes
 
     - name: Remove old Kubernetes GPG key if exists
       ansible.builtin.file:
