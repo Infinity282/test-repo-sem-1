@@ -11,11 +11,11 @@
       register: join_command_file
       delegate_to: k8s-master-01
 
-  - name: Join worker to cluster
-    ansible.builtin.shell: "{{ join_command_file.content | b64decode }}"
-    when: join_command_file.content is defined
-    args:
-      creates: /etc/kubernetes/kubelet.conf
+    - name: Join worker to cluster
+      ansible.builtin.shell: "{{ join_command_file.content | b64decode }}"
+      when: join_command_file.content is defined
+      args:
+        creates: /etc/kubernetes/kubelet.conf
 
     - name: Wait for node to register
       ansible.builtin.wait_for:
@@ -33,6 +33,7 @@
     - name: Display join status
       ansible.builtin.debug:
         msg: "Node {{ inventory_hostname }} joined successfully"
+
 
 
 
