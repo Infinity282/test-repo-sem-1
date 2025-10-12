@@ -28,11 +28,12 @@
       delegate_to: k8s-master-01
       retries: 10
       delay: 15
-      until: node_status.rc == 0
+      until: result.rc == 0
 
     - name: Display join status
       ansible.builtin.debug:
         msg: "Node {{ inventory_hostname }} joined successfully"
+
 
 
 
