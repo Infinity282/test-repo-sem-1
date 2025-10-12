@@ -24,7 +24,7 @@
 
     - name: Verify node status from master
       ansible.builtin.shell: |
-        kubectl --kubeconfig=/home/admin/.kube/config get nodes {{ inventory_hostname }}
+        kubectl --kubeconfig=/home/admin/.kube/config get node {{ inventory_hostname }}
       delegate_to: k8s-master-01
       retries: 10
       delay: 15
@@ -33,6 +33,7 @@
     - name: Display join status
       ansible.builtin.debug:
         msg: "Node {{ inventory_hostname }} joined successfully"
+
 
 
 
