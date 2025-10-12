@@ -5,22 +5,22 @@
   vars:
     ansible_become_password: "1234"
   tasks:
-    - name: Read join command from master node
-      ansible.builtin.slurp:
-        src: /tmp/k8s_join_command.txt
-      register: join_command_file
-      delegate_to: k8s-master-01
+    # - name: Read join command from master node
+    #   ansible.builtin.slurp:
+    #     src: /tmp/k8s_join_command.txt
+    #   register: join_command_file
+    #   delegate_to: k8s-master-01
 
-    - name: Join worker to cluster
-      ansible.builtin.shell: "{{ join_command_file.content | b64decode }}"
-      when: join_command_file.content is defined
-      args:
-        creates: /etc/kubernetes/kubelet.conf
+    # - name: Join worker to cluster
+    #   ansible.builtin.shell: "{{ join_command_file.content | b64decode }}"
+    #   when: join_command_file.content is defined
+    #   args:
+    #     creates: /etc/kubernetes/kubelet.conf
 
-    - name: Wait for node to register
-      ansible.builtin.wait_for:
-        path: /etc/kubernetes/kubelet.conf
-        timeout: 60
+    # - name: Wait for node to register
+    #   ansible.builtin.wait_for:
+    #     path: /etc/kubernetes/kubelet.conf
+    #     timeout: 60
 
     - name: Verify node status from master
       ansible.builtin.shell: |
@@ -33,6 +33,7 @@
     - name: Display join status
       ansible.builtin.debug:
         msg: "Node {{ inventory_hostname }} joined successfully"
+
 
 
 
