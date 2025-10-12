@@ -29,10 +29,12 @@
       retries: 10
       delay: 15
       until: result.rc == 0
+      register: result
 
     - name: Display join status
       ansible.builtin.debug:
         msg: "Node {{ inventory_hostname }} joined successfully"
+
 
 
 
