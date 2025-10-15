@@ -26,13 +26,13 @@
         flat: yes
       become_user: "root"
         
-    - name: Set correct permissions on kubeconfig
-      ansible.builtin.file:
-        path: /home/{{ whoami_output.stdout }}/.kube/config
-        owner: semaphore
-        mode: 0777
-      delegate_to: "{{ ansible_control_name }}"
-      become_user: "root"
+    # - name: Set correct permissions on kubeconfig
+    #   ansible.builtin.file:
+    #     path: /home/{{ whoami_output.stdout }}/.kube/config
+    #     owner: semaphore
+    #     mode: 0777
+    #   delegate_to: "{{ ansible_control_name }}"
+    #   become_user: "root"
 
     - name: Install kubectl on ansible-control node
       package:
@@ -57,6 +57,7 @@
       ansible.builtin.debug:
         msg: "{{ kubectl_nodes.stdout }}"
       delegate_to: "{{ ansible_control_name }}"
+
 
 
 
