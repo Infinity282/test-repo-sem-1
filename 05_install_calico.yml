@@ -1,5 +1,6 @@
 - name: Install Calico network plugin
   hosts: k8s_master
+  become: true
   become_method: sudo
   vars:
     ansible_become_password: "1234"
@@ -20,6 +21,7 @@
     - name: Show nodes
       debug:
         msg: "{{ nodes.stdout }}"
+
 
 
 
