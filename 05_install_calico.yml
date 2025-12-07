@@ -1,6 +1,8 @@
 - name: Install Calico network plugin
   hosts: k8s_master
-  become: yes
+  become_method: sudo
+  vars:
+    ansible_become_password: "1234"
   tasks:
     - name: Apply Calico manifest
       command: kubectl --kubeconfig=/home/admin/.kube/config apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/calico.yaml
@@ -18,5 +20,6 @@
     - name: Show nodes
       debug:
         msg: "{{ nodes.stdout }}"
+
 
 
