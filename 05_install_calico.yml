@@ -7,15 +7,15 @@
   tasks:
     - name: Apply Calico manifest
       ansible.builtin.shell: |
-        kubectl --kubeconfig=/home/admin/.kube/config apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/calico.yaml
+        kubectl --kubeconfig=/home/admin/.kube/config apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
     
-    - name: Wait for calico-node to be ready
-      ansible.builtin.shell: |
-        kubectl --kubeconfig=/home/admin/.kube/config wait --for=condition=ready pod -l k8s-app=calico-node -n kube-system --timeout=300s
+    # - name: Wait for calico-node to be ready
+    #   ansible.builtin.shell: |
+    #     kubectl --kubeconfig=/home/admin/.kube/config wait --for=condition=ready pod -l k8s-app=calico-node -n kube-system --timeout=300s
       
-    - name: Wait for calico-kube-controllers to be ready
-      ansible.builtin.shell: |
-        kubectl --kubeconfig=/home/admin/.kube/config wait --for=condition=ready pod -l k8s-app=calico-kube-controllers -n kube-system --timeout=300s
+    # - name: Wait for calico-kube-controllers to be ready
+    #   ansible.builtin.shell: |
+    #     kubectl --kubeconfig=/home/admin/.kube/config wait --for=condition=ready pod -l k8s-app=calico-kube-controllers -n kube-system --timeout=300s
       
     - name: Check nodes
       ansible.builtin.shell: |
@@ -25,6 +25,7 @@
     - name: Show nodes
       debug:
         msg: "{{ nodes.stdout }}"
+
 
 
 
