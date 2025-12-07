@@ -7,7 +7,7 @@
   tasks:
     - name: Create test namespace
       ansible.builtin.shell: |
-        kubectl --kubeconfig=/home/admin/.kube/config create namespace test --dry-run=client -o yaml | kubectl --kubeconfig=/home/admin/.kube/config apply -f
+        kubectl --kubeconfig=/home/admin/.kube/config create namespace test --dry-run=client -o yaml | kubectl --kubeconfig=/home/admin/.kube/config apply -f -
     
     - name: Deploy test nginx application
       ansible.builtin.shell: |
@@ -42,6 +42,7 @@
     - name: Cleanup test resources
       ansible.builtin.shell: |
           kubectl --kubeconfig=/home/admin/.kube/config delete namespace test
+
 
 
 
