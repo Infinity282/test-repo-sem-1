@@ -25,7 +25,7 @@
     
     - name: Display test pods
       ansible.builtin.debug:
-      msg: "{{ test_pods.stdout }}"
+        msg: "{{ test_pods.stdout }}"
     
     - name: Test service connectivity
       ansible.builtin.shell: |
@@ -34,10 +34,11 @@
     
     - name: Display curl test result
       ansible.builtin.debug:
-      msg: "Service test result: {{ curl_test.stdout }}"
+        msg: "Service test result: {{ curl_test.stdout }}"
     
     - name: Cleanup test resources
       ansible.builtin.shell: |
           kubectl --kubeconfig=/home/admin/.kube/config delete namespace test
+
 
 
