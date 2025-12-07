@@ -5,6 +5,7 @@
   vars:
     ansible_become_password: "1234"
     admin_user: "admin"
+    pod_network_cidr: "10.244.0.0/16"
   tasks:
     - name: Create admin group
       ansible.builtin.group:
@@ -29,7 +30,7 @@
     - name: Initialize cluster with kubeadm
       ansible.builtin.shell: |
         kubeadm init \
-          --pod-network-cidr 192.168.0.0/16 \
+          --pod-network-cidr {{ pod_network_cidr }} \
           --kubernetes-version=v1.32.0   
       args:
         creates: /etc/kubernetes/admin.conf
@@ -83,6 +84,7 @@
     - name: Show nodes
       ansible.builtin.debug:
         msg: "Текущий пользователь: {{ get_nodes.stdout }}"
+
 
 
 
