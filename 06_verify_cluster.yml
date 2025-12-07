@@ -3,33 +3,41 @@
   become: yes
   tasks:
     - name: Create test namespace
-    command: kubectl --kubeconfig=/home/admin/.kube/config --kubeconfig=/home/admin/.kube/config create namespace test --dry-run=client -o yaml | kubectl --kubeconfig=/home/admin/.kube/config apply -f
+      ansible.builtin.shell: |
+        kubectl --kubeconfig=/home/admin/.kube/config create namespace test --dry-run=client -o yaml | kubectl --kubeconfig=/home/admin/.kube/config apply -f
     
     - name: Deploy test nginx application
-    command: kubectl --kubeconfig=/home/admin/.kube/config create deployment nginx-test --image=nginx:alpine -n test
+      ansible.builtin.shell: |
+        kubectl --kubeconfig=/home/admin/.kube/config create deployment nginx-test --image=nginx:alpine -n test
     
     - name: Expose deployment as service
-    command: kubectl --kubeconfig=/home/admin/.kube/config expose deployment nginx-test --port=80 --target-port=80 -n test
+      ansible.builtin.shell: |
+        kubectl --kubeconfig=/home/admin/.kube/config expose deployment nginx-test --port=80 --target-port=80 -n test
     
     - name: Wait for test pod to be ready
-    command: kubectl --kubeconfig=/home/admin/.kube/config wait --for=condition=ready pod -l app=nginx-test -n test --timeout=120s
+      ansible.builtin.shell: |
+        kubectl --kubeconfig=/home/admin/.kube/config wait --for=condition=ready pod -l app=nginx-test -n test --timeout=120s
     
     - name: Check test pod status
-    command: kubectl --kubeconfig=/home/admin/.kube/config get pods -n test -o wide
-    register: test_pods
+      ansible.builtin.shell: |
+        kubectl --kubeconfig=/home/admin/.kube/config get pods -n test -o wide
+      register: test_pods
     
     - name: Display test pods
-    ansible.builtin.debug:
-    msg: "{{ test_pods.stdout }}"
+      ansible.builtin.debug:
+      msg: "{{ test_pods.stdout }}"
     
     - name: Test service connectivity
-    command: kubectl --kubeconfig=/home/admin/.kube/config run test-curl --image=curlimages/curl:latest -i --rm --restart=Never -- curl -s http://nginx-test.test:80
-    register: curl_test
+      ansible.builtin.shell: |
+        kubectl --kubeconfig=/home/admin/.kube/config run test-curl --image=curlimages/curl:latest -i --rm --restart=Never -- curl -s http://nginx-test.test:80
+      register: curl_test
     
     - name: Display curl test result
-    ansible.builtin.debug:
-    msg: "Service test result: {{ curl_test.stdout }}"
+      ansible.builtin.debug:
+      msg: "Service test result: {{ curl_test.stdout }}"
     
     - name: Cleanup test resources
-    command: kubectl --kubeconfig=/home/admin/.kube/config delete namespace test
+      ansible.builtin.shell: |
+          kubectl --kubeconfig=/home/admin/.kube/config delete namespace test
+
 
