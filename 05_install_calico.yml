@@ -1,26 +1,46 @@
 - name: Install Calico network plugin
   hosts: k8s_master
   become: true
-  become_method: sudo
+  become_method: "su"
   vars:
     ansible_become_password: "1234"
   tasks:
+    - name: "ШАГ 1: Определяю текущего пользователя"
+      ansible.builtin.shell: |
+        whoami
+      register: whoami_output
+      delegate_to: "{{ ansible_control_name }}"
+      become: false
+      
+    - name: "ШАГ 2: Показываю результат"
+      ansible.builtin.debug:
+        msg: "Текущий пользователь: {{ whoami_output.stdout }}"
+    
     - name: Apply Calico manifest
-      command: kubectl --kubeconfig=/home/admin/.kube/config apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/calico.yaml
+      ansible.builtin.shell: |
+        kubectl --kubeconfig=/home/{{ whoami_output.stdout }}/.kube/config apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/calico.yaml
+      become_user: "root"
     
     - name: Wait for calico-node to be ready
-      command: kubectl --kubeconfig=/home/admin/.kube/config wait --for=condition=ready pod -l k8s-app=calico-node -n kube-system --timeout=300s
-    
+      ansible.builtin.shell: |
+        kubectl --kubeconfig=/home/{{ whoami_output.stdout }}/.kube/config wait --for=condition=ready pod -l k8s-app=calico-node -n kube-system --timeout=300s
+      become_user: "root"
+      
     - name: Wait for calico-kube-controllers to be ready
-      command: kubectl --kubeconfig=/home/admin/.kube/config wait --for=condition=ready pod -l k8s-app=calico-kube-controllers -n kube-system --timeout=300s
-    
+      ansible.builtin.shell: |
+        kubectl --kubeconfig=/home/{{ whoami_output.stdout }}/.kube/config wait --for=condition=ready pod -l k8s-app=calico-kube-controllers -n kube-system --timeout=300s
+      become_user: "root"
+      
     - name: Check nodes
-      command: kubectl --kubeconfig=/home/admin/.kube/config get nodes
+      ansible.builtin.shell: |
+        kubectl --kubeconfig=/home/{{ whoami_output.stdout }}/.kube/config get nodes
       register: nodes
+      become_user: "root"
     
     - name: Show nodes
       debug:
         msg: "{{ nodes.stdout }}"
+
 
 
 
