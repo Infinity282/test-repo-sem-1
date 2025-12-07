@@ -29,5 +29,7 @@
     - name: Display curl test result
     ansible.builtin.debug:
     msg: "Service test result: {{ curl_test.stdout }}"
+    
     - name: Cleanup test resources
     command: kubectl --kubeconfig=/home/admin/.kube/config delete namespace test
+
