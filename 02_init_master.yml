@@ -3,7 +3,6 @@
   become: true
   become_method: sudo
   vars:
-    pod_network_cidr: "10.244.0.0/16"
     ansible_become_password: "1234"
     admin_user: "admin"
   tasks:
@@ -31,9 +30,7 @@
       ansible.builtin.shell: |
         kubeadm init \
           --pod-network-cidr 192.168.0.0/16 \
-          --service-cidr 10.96.0.0/12 \
-          --apiserver-advertise-address 192.168.56.104 \
-          --apiserver-cert-extra-sans 192.168.56.104
+          --kubernetes-version=v1.32.0   
       args:
         creates: /etc/kubernetes/admin.conf
       register: kubeadm_init
@@ -86,6 +83,7 @@
     - name: Show nodes
       ansible.builtin.debug:
         msg: "Текущий пользователь: {{ get_nodes.stdout }}"
+
 
 
 
