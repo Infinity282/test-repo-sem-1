@@ -4,6 +4,8 @@
   become_method: "su"
   vars:
     ansible_become_password: "1234"
+    ansible_control_name: "127.0.0.1"
+    admin_user: "admin"
   tasks:
     - name: "ШАГ 1: Определяю текущего пользователя"
       ansible.builtin.shell: |
@@ -40,6 +42,7 @@
     - name: Show nodes
       debug:
         msg: "{{ nodes.stdout }}"
+
 
 
 
