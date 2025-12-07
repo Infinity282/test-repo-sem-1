@@ -1,6 +1,9 @@
 - name: Verify Kubernetes cluster functionality
   hosts: k8s_master
   become: yes
+  become_method: sudo
+  vars:
+    ansible_become_password: "1234"
   tasks:
     - name: Create test namespace
       ansible.builtin.shell: |
@@ -39,6 +42,7 @@
     - name: Cleanup test resources
       ansible.builtin.shell: |
           kubectl --kubeconfig=/home/admin/.kube/config delete namespace test
+
 
 
 
